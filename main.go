@@ -5,16 +5,30 @@ package main
 
 import (
     "fmt"
+    "net/http"
+    "io/ioutil"
 )
 
 const uri string = "http://www.xe.com/currency/usd-us-dollar";
 
 func main() {
-    fmt.Println(cravler())
+    fmt.Println(reader())
 }
 
-func cravler() string {
-    return uri;
+func reader() string {
+    resp, err := http.Get(uri)
+    fmt.Println(resp.Body)
+
+    if err != nil {
+        return ""
+    } else {
+        defer resp.Body.Close()
+        contents, err := ioutil.ReadAll(resp.Body)
+        if err != nil {
+            return ""
+        }
+        return string(contents);
+    }
 }
 
 func formatter() string {
